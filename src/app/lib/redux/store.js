@@ -1,18 +1,26 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/authSlice";
-import studentsReducer from "./features/studentsSlice";
-import attendanceReducer from "./features/attendanceSlice";
-import submissionsReducer from "./features/submissionsSlice";
+import userReducer from "./features/userSlice";
+import lectureReducer from "./features/lectureSlice";
+import noteReducer from "./features/noteSlice";
+import progressReducer from "./features/progressSlice";
+import submissionReducer from "./features/submissionSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    students: studentsReducer,
-    attendance: attendanceReducer,
-    submissions: submissionsReducer,
+    user: userReducer,
+    lectures: lectureReducer,
+    notes: noteReducer,
+    progress: progressReducer,
+    submissions: submissionReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
-// Use these if you need the types in other files
+// For use in other files
 export const getState = store.getState;
 export const dispatch = store.dispatch;
