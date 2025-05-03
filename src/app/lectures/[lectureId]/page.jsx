@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
-import { updateProgress } from '@/lib/redux/features/progressSlice';
-import { selectAuth } from '@/lib/redux/features/authSlice';
+import { useAppDispatch, useAppSelector } from '../../lib/redux/hooks';
+import { updateProgress } from '../../lib/redux/features/progressSlice';
+import { selectAuth } from '../../lib/redux/features/authSlice';
 
 export default function LecturePage() {
   const params = useParams();
