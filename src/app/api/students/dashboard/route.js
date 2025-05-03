@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import User from '@/models/User';
-import Progress from '@/models/Progress';
-import PointsHistory from '@/models/PointsHistory';
-import Lecture from '@/models/Lecture';
-import Note from '@/models/Note';
+import dbConnect from '../../../lib/db';
+import User from '../../../models/User';
+import Progress from '../../../models/Progress';
+import PointsHistory from '../../../models/PointsHistory';
+import Lecture from '../../../models/Lecture';
 
 export async function GET(request) {
   try {

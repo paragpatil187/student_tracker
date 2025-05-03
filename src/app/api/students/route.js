@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import User from '@/models/User';
-import Progress from '@/models/Progress';
-import PointsHistory from '@/models/PointsHistory';
+import dbConnect from '../../lib/db';
+import User from '../../models/User';
+import Progress from '../../models/Progress';
+import PointsHistory from '../../models/PointsHistory';
 
 export async function GET(request) {
   try {
