@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { NavigationBar } from "./components/NavigationBar";
-import { LandingPage } from "./components/LandingPage";
-import { LoginForm } from "./components/LoginForm";
-import { DashboardLayout } from "./components/DashboardLayout";
+import { NavigationBar } from "./NavigationBar";
+import { LandingPage } from "./LandingPage";
+import { LoginForm } from "./LoginForm";
+import { DashboardLayout } from "./DashboardLayout";
 
 function ProgressTracker() {
   const [currentPage, setCurrentPage] = useState("landing");

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const lectureSchema = new mongoose.Schema({
   title: {
@@ -13,6 +13,9 @@ const lectureSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  thumbnail: {
+    type: String,
+  },
   duration: {
     type: Number,
     required: true,
@@ -23,13 +26,44 @@ const lectureSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: true,
+    required: false,
+  },
+  tags: [{
+    type: String,
+  }],
+  difficulty: {
+    type: String,
+    enum: ['beginner', 'intermediate', 'advanced'],
+    default: 'intermediate',
+  },
+  prerequisites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Lecture',
+  }],
+  relatedNotes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Note',
+  }],
+  order: {
+    type: Number,
+    required: false,
+  },
+  isPublished: {
+    type: Boolean,
+    default: true,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-export default mongoose.models.Lecture ||
-  mongoose.model("Lecture", lectureSchema);
+// Add indexes
+lectureSchema.index({ category: 1, order: 1 });
+lectureSchema.index({ tags: 1 });
+
+export default mongoose.models.Lecture || mongoose.model('Lecture', lectureSchema);

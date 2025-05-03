@@ -1,37 +1,51 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const progressSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  contentType: {
-    type: String,
-    enum: ["lecture", "note"],
+    ref: 'User',
     required: true,
   },
   contentId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    refPath: "contentType",
+    refPath: 'contentType',
+  },
+  contentType: {
+    type: String,
+    required: true,
+    enum: ['lecture', 'note'],
   },
   completed: {
     type: Boolean,
     default: false,
   },
-  pointsEarned: {
+  watchTime: {
     type: Number,
     default: 0,
-  },
-  completedAt: {
-    type: Date,
   },
   lastAccessedAt: {
     type: Date,
     default: Date.now,
   },
+  completedAt: {
+    type: Date,
+  },
+  attempts: {
+    type: Number,
+    default: 0,
+  },
+  notes: {
+    type: String,
+  },
+  bookmarked: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-export default mongoose.models.Progress ||
-  mongoose.model("Progress", progressSchema);
+// Add indexes for better query performance
+progressSchema.index({ userId: 1, contentId: 1 }, { unique: true });
+progressSchema.index({ userId: 1, completed: 1 });
+
+export default mongoose.models.Progress || mongoose.model('Progress', progressSchema);

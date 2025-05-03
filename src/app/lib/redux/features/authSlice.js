@@ -1,18 +1,34 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { signIn, signOut } from "next-auth/react";
 
-// Async thunks
+// Async thunks for authentication
 export const loginUser = createAsyncThunk(
   "auth/login",
-  async (credentials, { rejectWithValue }) => {
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
+      const response = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message);
-      return data;
+
+      if (response.error) {
+        return rejectWithValue(response.error);
+      }
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const loginWithGoogle = createAsyncThunk(
+  "auth/loginWithGoogle",
+  async (_, { rejectWithValue }) => {
+    try {
+      await signIn("google", { callbackUrl: "/" });
+      return null; // This will redirect, so no need to return anything
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -23,10 +39,8 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/auth/logout");
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message);
-      return data;
+      await signOut({ callbackUrl: "/" });
+      return null;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -35,8 +49,7 @@ export const logoutUser = createAsyncThunk(
 
 const initialState = {
   user: null,
-  isAuthenticated: false,
-  loading: false,
+  isLoading: false,
   error: null,
 };
 
@@ -46,7 +59,6 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      state.isAuthenticated = !!action.payload;
     },
     clearError: (state) => {
       state.error = null;
@@ -56,32 +68,44 @@ const authSlice = createSlice({
     builder
       // Login
       .addCase(loginUser.pending, (state) => {
-        state.loading = true;
+        state.isLoading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
+      .addCase(loginUser.fulfilled, (state) => {
+        state.isLoading = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      // Google Login
+      .addCase(loginWithGoogle.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(loginWithGoogle.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(loginWithGoogle.rejected, (state, action) => {
+        state.isLoading = false;
         state.error = action.payload;
       })
       // Logout
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-        state.isAuthenticated = false;
+        state.isLoading = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
 export const { setUser, clearError } = authSlice.actions;
-export default authSlice.reducer;
-
-// Selectors
 export const selectAuth = (state) => state.auth;
-export const selectUser = (state) => state.auth.user;
-export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
-export const selectAuthLoading = (state) => state.auth.loading;
-export const selectAuthError = (state) => state.auth.error;
+
+export default authSlice.reducer;

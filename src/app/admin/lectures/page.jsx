@@ -12,6 +12,7 @@ export default function AdminLectures() {
     duration: "",
     points: "",
     category: "",
+    order:"",
   });
 
   useEffect(() => {
@@ -51,6 +52,7 @@ export default function AdminLectures() {
           duration: "",
           points: "",
           category: "",
+          order:"",
         });
       }
     } catch (error) {
@@ -126,7 +128,7 @@ export default function AdminLectures() {
                 onChange={(e) =>
                   setFormData({ ...formData, videoUrl: e.target.value })
                 }
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black"
                 required
               />
             </div>
@@ -145,6 +147,30 @@ export default function AdminLectures() {
                 required
               />
             </div>
+            <div>
+  <label className="block text-sm font-medium text-gray-700">Order</label>
+  <input
+    type="text"
+    value={formData.order}
+    onChange={(e) =>
+      setFormData({ ...formData, order: e.target.value })
+    }
+    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+    required
+  />
+</div>
+            <div>
+  <label className="block text-sm font-medium text-gray-700">Category</label>
+  <input
+    type="text"
+    value={formData.category}
+    onChange={(e) =>
+      setFormData({ ...formData, category: e.target.value })
+    }
+    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+    required
+  />
+</div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700">

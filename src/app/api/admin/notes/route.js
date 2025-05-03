@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import Note from "@/models/Note";
-import { adminAuthMiddleware } from "@/middleware/adminAuth";
+import dbConnect from "../../../lib/db";
+import Note from "../../../models/Note";
+import { adminAuthMiddleware } from "../../../../middleware/adminAuth";
 
 export async function POST(request) {
   await adminAuthMiddleware(request);
