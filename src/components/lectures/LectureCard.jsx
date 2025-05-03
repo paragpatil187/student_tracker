@@ -1,11 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 export function LectureCard({ lecture }) {
   const { data: session } = useSession();
   const [isCompleted, setIsCompleted] = useState(false);
+ // Check if the lecture is already marked as completed by the current user
+ useEffect(() => {
+  if (session?.user?.id) {
+    const checkCompletion = async () => {
+      try {
+        const response = await fetch(`/api/progress?contentId=${lecture._id}&contentType=lecture`);
+        if (response.ok) {
+          const progress = await response.json();
+          const lectureProgress = progress.find(
+            (item) => item.contentId.toString() === lecture._id.toString()
+          );
+          if (lectureProgress?.completed) {
+            setIsCompleted(true); // Set the lecture as completed if found in progress
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching progress:", error);
+      }
+    };
+
+    checkCompletion();
+  }
+}, [session?.user?.id, lecture._id]);
 
   const markAsCompleted = async () => {
     try {

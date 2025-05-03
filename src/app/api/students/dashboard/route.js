@@ -23,7 +23,9 @@ export async function GET(request) {
 
     // Get progress statistics
     const progress = await Progress.find({ userId });
-    const completedItems = progress.filter(p => p.completed).length;
+    console.log('Progress:', progress);  // Debug log for progress data
+    const completedItems = progress.filter(p => p.completed === true).length;
+    console.log('Completed Items:', completedItems);  // Debug log for completed items count
 
     // Get points history
     const pointsHistory = await PointsHistory.find({ userId })
@@ -39,7 +41,7 @@ export async function GET(request) {
 
     // Get recommended content
     const completedContentIds = progress
-      .filter(p => p.completed)
+      .filter(p => p.completed === true)
       .map(p => p.contentId);
 
     const recommendedLectures = await Lecture.find({

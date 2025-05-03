@@ -70,6 +70,7 @@ export default function DashboardPage() {
 
           {/* Stats Section */}
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Total Points */}
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
@@ -90,6 +91,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
+            {/* Completed Items */}
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
@@ -99,10 +101,10 @@ export default function DashboardPage() {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Completed Items
+                        Completed Lectures
                       </dt>
                       <dd className="text-2xl font-semibold text-gray-900">
-                        {progressStats.completedItems}
+                        {progressStats.completedLectures || 0} {/* Make sure this value is updated */}
                       </dd>
                     </dl>
                   </div>
@@ -110,6 +112,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
+            {/* Completion Rate */}
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
@@ -123,8 +126,8 @@ export default function DashboardPage() {
                       </dt>
                       <dd className="text-2xl font-semibold text-gray-900">
                         {Math.round(
-                          (progressStats.completedItems /
-                            progressStats.totalItems) *
+                          (progressStats.completedLectures /
+                            progressStats.totalLectures) *
                             100,
                         )}
                         %
@@ -135,6 +138,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
+            {/* Active Streak */}
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
@@ -147,7 +151,7 @@ export default function DashboardPage() {
                         Active Streak
                       </dt>
                       <dd className="text-2xl font-semibold text-gray-900">
-                        5 days
+                        5 days {/* You can update this based on your streak logic */}
                       </dd>
                     </dl>
                   </div>

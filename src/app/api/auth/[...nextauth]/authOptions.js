@@ -1,11 +1,11 @@
-import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import dbConnect from "../../../lib/db";
+import dbConnect from "../../../lib/db"; // Ensure the correct path based on your folder structure
 import User from "../../../models/User";
 import bcrypt from "bcryptjs";
 
-export const authOptions = {
+// Define authOptions here
+const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -21,21 +21,11 @@ export const authOptions = {
         await dbConnect();
 
         const user = await User.findOne({ email: credentials.email });
-        if (!user) {
+        if (!user || !(await bcrypt.compare(credentials.password, user.password))) {
           throw new Error("Invalid email or password");
         }
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) {
-          throw new Error("Invalid email or password");
-        }
-
-        if (!user.isAdmin) {
-          throw new Error("You do not have admin access");
-        }
-
-        user.lastLogin = new Date();
-        await user.save();
+        if (!user.isAdmin) throw new Error("You do not have admin access");
 
         return {
           id: user._id.toString(),
@@ -71,5 +61,4 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export default authOptions; // Export the authOptions object
